@@ -1,0 +1,12 @@
+const CONFIG = {
+	API_MAX_LATENCY_MS: 1000,
+	API_SUCCESS_THRESHOLD_MS: 990,
+	TABLE_DATA_LIMIT: 10,
+	SORT_ORDER: {
+		ASCENDING: 'asc',
+		DESCENDING: 'desc',
+		NONE: 'none',
+	},
+};
+
+export { CONFIG };
