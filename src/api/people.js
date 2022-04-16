@@ -25,7 +25,7 @@ function buildPeople(count) {
 				id: faker.datatype.uuid(),
 				name: `${fakeName.firstName()} ${fakeName.lastName()}`,
 				gender: fakeName.gender(true),
-				phone: faker.phone.phoneNumber(),
+				phone: faker.phone.phoneNumber('+## ## ### ## ###'),
 				company: faker.company.companyName(),
 				jobTitle: fakeName.jobTitle(),
 				jobArea: fakeName.jobArea(),

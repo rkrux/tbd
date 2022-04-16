@@ -7,14 +7,13 @@ import useApi, {
 import { CONFIG } from '../../constants';
 import { getSortOrder } from '../../utils';
 import { FlexContainer } from '../styles';
+import { StyledTd } from './styles';
 
 /*
 TODO
-- sort and keys question
+- keys question
 - useEffect question
 - context rerender
-- ignore id in filter
-- highlight matched item in UI
 */
 
 const DEFAULT_FILTER_TEXT = undefined;
@@ -33,15 +32,31 @@ function filterRows(rows, filterText) {
 		return rows;
 	}
 
-	return rows.filter((row, index) => {
+	return rows.filter((row) => {
 		const rowColumns = Object.values(row).filter((col) =>
 			col.includes(filterText)
 		);
-		// console.log(index, rowColumns);
 		if (!rowColumns || rowColumns.length === 0) {
 			return false;
 		}
 		return true;
+	});
+}
+
+function sortRows(rows, sortParams) {
+	const sortIndex =
+		sortParams.order === CONFIG.SORT_ORDER.NONE ? 0 : sortParams.index;
+
+	return rows.sort((firstRow, secondRow) => {
+		const firstValue = firstRow[PEOPLE_ATTRIBUTES[sortIndex]];
+		const secondValue = secondRow[PEOPLE_ATTRIBUTES[sortIndex]];
+		if (firstValue < secondValue) {
+			return sortParams.order === CONFIG.SORT_ORDER.ASCENDING ? -1 : 1;
+		}
+		if (firstValue > secondValue) {
+			return sortParams.order === CONFIG.SORT_ORDER.ASCENDING ? 1 : -1;
+		}
+		return 0;
 	});
 }
 
@@ -54,13 +69,16 @@ function TableProvider({ children }) {
 					return {
 						...currentState,
 						filterText: action.payload,
-						rows: filterRows(currentState.dataLifecycle.data, action.payload),
+						rows: sortRows(
+							filterRows(currentState.dataLifecycle.data, action.payload),
+							currentState.sortParams
+						),
 					};
 				case 'sort':
 					return {
 						...currentState,
 						sortParams: action.payload,
-						// Add sorting here
+						rows: sortRows(currentState.rows, action.payload),
 					};
 				case 'dataLifecycle':
 					return {
@@ -147,7 +165,7 @@ function TableFooter({ refetch }) {
 		rows,
 		sortParams,
 	} = tableDetails;
-	// console.log('TableFooter: ', loading, error, data);
+
 	return (
 		<tfoot>
 			<tr>
@@ -169,6 +187,7 @@ function TableData() {
 	const {
 		dataLifecycle: { loading, error },
 		rows,
+		filterText,
 	} = tableDetails;
 
 	if (loading) {
@@ -208,9 +227,14 @@ function TableData() {
 					<tr key={`row-${rowIndex}`}>
 						{PEOPLE_ATTRIBUTES.map((attribute, colIndex) => {
 							return (
-								<td key={`row-${rowIndex}-col-${colIndex}`}>
+								<StyledTd
+									key={`row-${rowIndex}-col-${colIndex}`}
+									containsFilter={
+										filterText && person[attribute].includes(filterText)
+									}
+								>
 									{person[attribute]}
-								</td>
+								</StyledTd>
 							);
 						})}
 					</tr>
@@ -226,8 +250,6 @@ function Table() {
 		{ asyncFunction: fetchPeople, executeOnMount: EXECUTE_ON_MOUNT },
 		CONFIG.TABLE_DATA_LIMIT
 	);
-
-	// console.log('Table: ', loading, error, data);
 
 	useEffect(
 		() =>
