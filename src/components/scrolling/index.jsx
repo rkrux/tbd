@@ -5,19 +5,8 @@ import { CONFIG } from '../../constants';
 
 const THROTTLE_MS = 600;
 
-const PostContainer = styled.div`
+const Container = styled.div`
 	position: relative;
-`;
-
-const Post = styled.div`
-	height: 100px;
-	margin: 1vmin;
-	padding: 10px;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	border: 2px solid cyan;
-	border-radius: 8px;
 `;
 
 const TopButton = styled.button`
@@ -25,6 +14,27 @@ const TopButton = styled.button`
 	bottom: 2vh;
 	right: 2vw;
 	visibility: ${(props) => (props.isVisible === true ? 'visible' : 'hidden')};
+`;
+
+const PostContainer = styled.div`
+	position: relative;
+`;
+
+const PostSummary = styled.div`
+	position: absolute;
+	top: 2vh;
+	right: 1vw;
+	padding: 1vmin;
+	border: 2px solid lemonchiffon;
+	border-radius: 8px;
+`;
+
+const Post = styled.div`
+	width: 900px;
+	margin: 1vmin;
+	padding: 10px;
+	border: 2px solid cyan;
+	border-radius: 8px;
 `;
 
 function throttle(callbackFn, timeout, ...args) {
@@ -124,13 +134,14 @@ function Scrolling() {
 	}, [data]);
 
 	return (
-		<>
+		<Container>
+			<PostSummary>{`${postsList.length} posts!`}</PostSummary>
 			<PostContainer id="posts" ref={postsRef}>
 				{postsList.map((post) => (
 					<Post key={`post-${post.id}`}>
-						<span>{post.name}</span>
-						<span>{post.content}</span>
-						<span>{post.time.toString()}</span>
+						<b>{post.name}</b>
+						<p>{post.content}</p>
+						<em>{post.time.toString()}</em>
 					</Post>
 				))}
 			</PostContainer>
@@ -142,7 +153,7 @@ function Scrolling() {
 				</span>
 			)}
 			<TopScroller />
-		</>
+		</Container>
 	);
 }
 
