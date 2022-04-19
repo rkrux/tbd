@@ -11,7 +11,6 @@ import { StyledTd } from './styles';
 
 /*
 TODO
-- keys question
 - useEffect question
 - context rerender
 */
@@ -225,6 +224,8 @@ function TableData() {
 			{rows.map((person, rowIndex) => {
 				return (
 					<tr key={`row-${rowIndex}`}>
+						{' '}
+						{/* Use person[id] as key here */}
 						{PEOPLE_ATTRIBUTES.map((attribute, colIndex) => {
 							return (
 								<StyledTd
@@ -257,7 +258,7 @@ function Table() {
 				type: 'dataLifecycle',
 				payload: { loading, error, data },
 			}),
-		[loading, error, data, tableDispatch] // Why storing these in object causes infinite renders?
+		[loading, error, data, tableDispatch]
 	);
 
 	return (

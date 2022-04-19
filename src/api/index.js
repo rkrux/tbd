@@ -31,6 +31,7 @@ function reducer(currentState, action) {
 }
 
 function useApi({ asyncFunction, executeOnMount = true }, ...args) {
+	// console.log('useApi: ', args);
 	const [state, dispatch] = useReducer(reducer, {
 		...DEFAULT_API_LIFECYCLE,
 		loading: executeOnMount,
@@ -57,10 +58,11 @@ function useApi({ asyncFunction, executeOnMount = true }, ...args) {
 
 	return {
 		...state,
-		refetch: () => apiDispatcher(dispatch, asyncFunction, ...args),
+		refetch: () => apiDispatcher(dispatch, asyncFunction, ...args), // Pass args to refetch()?
 	};
 }
 
 export default useApi;
 export { DEFAULT_API_LIFECYCLE };
 export * from './people';
+export * from './posts';

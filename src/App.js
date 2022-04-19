@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Carousel from './components/carousel';
-import ObserverManipulation from './components/observerManipulation';
-import InfiniteScroll from './components/infiniteScroll';
+import Scrolling from './components/scrolling';
 import MapClustering from './components/mapClustering';
 import Table from './components/table';
 import { StyledHeader, AppContainer } from './App.styles';
@@ -9,14 +8,13 @@ import { StyledHeader, AppContainer } from './App.styles';
 const componentConfig = {
 	carousel: <Carousel />,
 	table: <Table />,
-	observerManipulation: <ObserverManipulation />,
-	infiniteScroll: <InfiniteScroll />,
+	scrolling: <Scrolling />,
 	autocomplete: <></>,
 	mapClustering: <MapClustering />,
 };
 
 function App() {
-	const [component, setComponent] = useState('table');
+	const [component, setComponent] = useState('scrolling');
 
 	return (
 		<>
@@ -24,10 +22,7 @@ function App() {
 				<span onClick={() => setComponent('carousel')}>Carousel</span>
 				<span onClick={() => setComponent('table')}>Table (Sort/Filter)</span>
 				<span onClick={() => setComponent('observerManipulation')}>
-					Observer Manipulation
-				</span>
-				<span onClick={() => setComponent('infiniteScroll')}>
-					Infinite Scroll
+					Scrolling
 				</span>
 				<span onClick={() => setComponent('autocomplete')}>Autocomplete</span>
 				<span onClick={() => setComponent('mapClustering')}>
