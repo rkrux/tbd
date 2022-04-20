@@ -8,6 +8,7 @@ const CONFIG = {
 		DESCENDING: 'desc',
 		NONE: 'none',
 	},
+	THROTTLE_MS: 1000,
 };
 
 export { CONFIG };

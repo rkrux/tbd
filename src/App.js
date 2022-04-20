@@ -9,21 +9,19 @@ const componentConfig = {
 	carousel: <Carousel />,
 	table: <Table />,
 	scrolling: <Scrolling />,
-	autocomplete: <></>,
+	autocomplete: <>Here!</>,
 	mapClustering: <MapClustering />,
 };
 
 function App() {
-	const [component, setComponent] = useState('scrolling');
+	const [component, setComponent] = useState('carousel');
 
 	return (
 		<>
 			<StyledHeader>
 				<span onClick={() => setComponent('carousel')}>Carousel</span>
 				<span onClick={() => setComponent('table')}>Table (Sort/Filter)</span>
-				<span onClick={() => setComponent('observerManipulation')}>
-					Scrolling
-				</span>
+				<span onClick={() => setComponent('scrolling')}>Scrolling</span>
 				<span onClick={() => setComponent('autocomplete')}>Autocomplete</span>
 				<span onClick={() => setComponent('mapClustering')}>
 					Map Clustering

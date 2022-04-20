@@ -1,49 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import {
+	Container,
+	TopButton,
+	PostContainer,
+	PostSummary,
+	Post,
+	SummaryHeader,
+} from './styles';
 import useApi, { fetchPosts } from '../../api';
 import { CONFIG } from '../../constants';
+import { throttle } from '../../utils';
 
-const THROTTLE_MS = 600;
-
-const Container = styled.div`
-	position: relative;
-`;
-
-const TopButton = styled.button`
-	position: fixed;
-	bottom: 2vh;
-	right: 2vw;
-	visibility: ${(props) => (props.isVisible === true ? 'visible' : 'hidden')};
-`;
-
-const PostContainer = styled.div`
-	position: relative;
-`;
-
-const PostSummary = styled.div`
-	position: absolute;
-	top: 2vh;
-	right: 1vw;
-	padding: 1vmin;
-	border: 2px solid lemonchiffon;
-	border-radius: 8px;
-`;
-
-const Post = styled.div`
-	width: 900px;
-	margin: 1vmin;
-	padding: 10px;
-	border: 2px solid cyan;
-	border-radius: 8px;
-`;
-
-function throttle(callbackFn, timeout, ...args) {
-	let previousTimeout = 0;
-	return () => {
-		clearTimeout(previousTimeout);
-		previousTimeout = setTimeout(() => callbackFn(...args), timeout);
-	};
-}
+const OBSERVER_OPTIONS = {
+	root: null,
+	rootMargin: '0px',
+	threshold: 0,
+};
 
 function TopScroller() {
 	const [showTopScroller, toggleShowTopScroller] = useState(false);
@@ -57,10 +29,16 @@ function TopScroller() {
 			}
 		}
 
-		window.addEventListener('scroll', throttle(handleScroll, THROTTLE_MS));
+		window.addEventListener(
+			'scroll',
+			throttle(handleScroll, CONFIG.THROTTLE_MS)
+		);
 
 		return () =>
-			window.removeEventListener('scroll', throttle(handleScroll, THROTTLE_MS));
+			window.removeEventListener(
+				'scroll',
+				throttle(handleScroll, CONFIG.THROTTLE_MS)
+			);
 	}, []);
 
 	return (
@@ -75,85 +53,92 @@ function TopScroller() {
 	);
 }
 
-function useInsideViewport(elementRef) {
-	const [isInside, setIsInside] = useState(false);
-
-	const evaluate = () => {
+function useIntersectionObserver(elementRef, deps, callbackFn) {
+	useEffect(() => {
+		console.log(elementRef);
 		if (!elementRef.current) {
-			setIsInside(false);
+			console.error(
+				`Invalid element passed to useIntersectionObserver: ${elementRef.current}`
+			);
 			return;
 		}
 
-		const bounds = elementRef.current.getBoundingClientRect();
-		const newIsInside = bounds.bottom < window.innerHeight + 100; // Buffer of some pixels
-		setIsInside(newIsInside);
-		/*
-		console.log(
-			`useInsideViewport,`,
-			elementRef.current,
-			`${bounds.top}, ${bounds.bottom}, ${newIsInside}`
-		);
-		*/
-	};
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(callbackFn);
+		}, OBSERVER_OPTIONS);
 
-	useEffect(() => {
-		window.addEventListener('scroll', throttle(evaluate, THROTTLE_MS));
-		return () =>
-			window.removeEventListener('scroll', throttle(evaluate, THROTTLE_MS));
-	}, [elementRef.current]);
-
-	return [isInside, setIsInside];
+		observer.observe(elementRef.current);
+		return () => observer.disconnect();
+	}, deps);
 }
 
-let toDate = Date.now();
-
 function Scrolling() {
+	const toDate = useRef(Date.now());
 	const { refetch, loading, error, data } = useApi(
 		{ asyncFunction: fetchPosts, executeOnMount: true },
 		CONFIG.POST_LIMIT,
-		toDate
+		toDate.current
 	);
 
 	const postsRef = useRef();
-	const [isLastPostInViewport, toggleLastPostInViewport] =
-		useInsideViewport(postsRef);
 	const [postsList, updatePostsList] = useState([]);
 
-	useEffect(() => {
-		if (isLastPostInViewport) {
-			refetch();
-			toggleLastPostInViewport(false);
-		}
-	}, [isLastPostInViewport]);
+	const summaryRef = useRef(),
+		[showSummaryHeader, toggleSummaryHeader] = useState(false);
+
+	useIntersectionObserver(summaryRef, [], (entry) => {
+		toggleSummaryHeader(!entry.isIntersecting);
+	});
 
 	useEffect(() => {
 		if (data) {
-			toDate = data.toDate;
+			toDate.current = data.toDate;
 			updatePostsList([...postsList, ...data.posts]);
 		}
 	}, [data]);
 
+	useEffect(() => {
+		if (postsList.length > 0) {
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						refetch();
+					}
+				});
+			}, OBSERVER_OPTIONS);
+			observer.observe(postsRef.current.lastElementChild);
+			return () => observer.disconnect();
+		}
+	}, [postsList]);
+
 	return (
-		<Container>
-			<PostSummary>{`${postsList.length} posts!`}</PostSummary>
-			<PostContainer id="posts" ref={postsRef}>
-				{postsList.map((post) => (
-					<Post key={`post-${post.id}`}>
-						<b>{post.name}</b>
-						<p>{post.content}</p>
-						<em>{post.time.toString()}</em>
-					</Post>
-				))}
-			</PostContainer>
-			{loading && <>Loading posts...</>}
-			{error && (
-				<span>
-					Error in fetching posts: {error}
-					<button onClick={refetch}>Refetch</button>
-				</span>
+		<>
+			{showSummaryHeader && (
+				<SummaryHeader>{`Hi user, ${postsList.length} posts for you to read`}</SummaryHeader>
 			)}
+			<Container>
+				<PostSummary
+					ref={summaryRef}
+				>{`${postsList.length} posts`}</PostSummary>
+				<PostContainer id="posts" ref={postsRef}>
+					{postsList.map((post) => (
+						<Post key={`post-${post.id}`}>
+							<b>{post.name}</b>
+							<p>{post.content}</p>
+							<em>{post.time.toString()}</em>
+						</Post>
+					))}
+				</PostContainer>
+				{loading && <>Loading posts...</>}
+				{error && (
+					<span>
+						Error in fetching posts: {error}
+						<button onClick={refetch}>Refetch</button>
+					</span>
+				)}
+			</Container>
 			<TopScroller />
-		</Container>
+		</>
 	);
 }
 

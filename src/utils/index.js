@@ -14,4 +14,12 @@ function getSortOrder(currentSortOrder) {
 	return CONFIG.SORT_ORDER.NONE;
 }
 
-export { getRandomNumber, getSortOrder };
+function throttle(callbackFn, timeout, ...args) {
+	let previousTimeout = 0;
+	return () => {
+		clearTimeout(previousTimeout);
+		previousTimeout = setTimeout(() => callbackFn(...args), timeout);
+	};
+}
+
+export { getRandomNumber, getSortOrder, throttle };
