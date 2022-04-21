@@ -33,9 +33,8 @@ const Post = styled.div`
 `;
 
 const SummaryHeader = styled.div`
-	position: fixed;
+	position: sticky;
 	top: 0px;
-	left: 0px;
 	width: 100%;
 	padding: 1vmin;
 	background-color: palegreen;

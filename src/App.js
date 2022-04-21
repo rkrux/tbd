@@ -3,18 +3,19 @@ import Carousel from './components/carousel';
 import Scrolling from './components/scrolling';
 import MapClustering from './components/mapClustering';
 import Table from './components/table';
+import { Autocomplete } from './components/autocomplete';
 import { StyledHeader, AppContainer } from './App.styles';
 
 const componentConfig = {
 	carousel: <Carousel />,
 	table: <Table />,
 	scrolling: <Scrolling />,
-	autocomplete: <>Here!</>,
+	autocomplete: <Autocomplete />,
 	mapClustering: <MapClustering />,
 };
 
 function App() {
-	const [component, setComponent] = useState('carousel');
+	const [component, setComponent] = useState('autocomplete');
 
 	return (
 		<>
