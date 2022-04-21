@@ -26,7 +26,6 @@ function buildPosts(count, toDate = Date.now()) {
 }
 
 async function fetchPosts(...args) {
-	console.log('fetchPosts');
 	return new Promise((resolve, reject) => {
 		const randomMs = getRandomNumber(CONFIG.API_MAX_LATENCY_MS);
 		setTimeout(() => {

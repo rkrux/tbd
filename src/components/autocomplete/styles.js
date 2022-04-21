@@ -34,4 +34,24 @@ const Option = styled.div`
 	}
 `;
 
-export { Container, AutocompleteContainer, Input, Popper, Option };
+const Loading = styled.div`
+	margin: 4px;
+	padding: 4px;
+	color: mediumturquoise;
+`;
+
+const Error = styled.div`
+	margin: 4px;
+	padding: 4px;
+	color: palevioletred;
+`;
+
+export {
+	Container,
+	AutocompleteContainer,
+	Input,
+	Popper,
+	Option,
+	Loading,
+	Error,
+};

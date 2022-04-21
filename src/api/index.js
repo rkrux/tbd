@@ -66,3 +66,4 @@ export default useApi;
 export { DEFAULT_API_LIFECYCLE };
 export * from './people';
 export * from './posts';
+export * from './passwords';
