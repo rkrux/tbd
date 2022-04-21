@@ -22,4 +22,16 @@ function throttle(callbackFn, timeout, ...args) {
 	};
 }
 
-export { getRandomNumber, getSortOrder, throttle };
+function logEvent(event) {
+	console.log(
+		event.type,
+		event._reactName,
+		event.target,
+		event.currentTarget,
+		event.relatedTarget,
+		event.isDefaultPrevented(),
+		event.isPropagationStopped()
+	);
+}
+
+export { getRandomNumber, getSortOrder, throttle, logEvent };

@@ -1,43 +1,15 @@
 import { useReducer, useRef, useState } from 'react';
-import styled from 'styled-components';
+import {
+	Container,
+	AutocompleteContainer,
+	Input,
+	Popper,
+	Option,
+} from './styles';
 
 const optionsData = Array(10)
 	.fill(undefined)
 	.map((_, index) => ({ key: index, displayValue: `Result ${index}` }));
-
-const Container = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-`;
-
-const AutocompleteContainer = styled.div`
-	padding: 8px;
-	border: 2px solid palevioletred;
-	width: 300px;
-`;
-
-const Input = styled.input`
-	width: 100%;
-`;
-
-const Popper = styled.div`
-	display: ${(props) => (props.show ? 'flex' : 'none')};
-	flex-direction: column;
-	border: 2px solid seashell;
-	max-height: 250px;
-	overflow: auto;
-`;
-
-const Option = styled.div`
-	margin: 4px;
-	padding: 4px;
-	border: 2px solid yellowgreen;
-	background-color: ${(props) => (props.isSelected ? 'lightblue' : '')};
-	&:hover {
-		background-color: lightblue;
-	}
-`;
 
 function autocompleteReducer(currentState, action) {
 	switch (action.type) {
@@ -72,17 +44,6 @@ const calculateNewIndex = (keyCode, index, length) => {
 	//Up Arrow
 	return index === 0 ? length - 1 : index - 1;
 };
-
-const logEvent = (event) =>
-	console.log(
-		event.type,
-		event._reactName,
-		event.target,
-		event.currentTarget,
-		event.relatedTarget,
-		event.isDefaultPrevented(),
-		event.isPropagationStopped()
-	);
 
 // API integration, debouncing
 // Caching
