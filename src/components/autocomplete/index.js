@@ -29,7 +29,7 @@ const Popper = styled.div`
 	overflow: auto;
 `;
 
-const Option = styled.button`
+const Option = styled.div`
 	margin: 4px;
 	padding: 4px;
 	border: 2px solid yellowgreen;
@@ -73,10 +73,20 @@ const calculateNewIndex = (keyCode, index, length) => {
 	return index === 0 ? length - 1 : index - 1;
 };
 
-// Close popper on outside click, doesn't have onBlur, figure out => Not needed in single select
+const logEvent = (event) =>
+	console.log(
+		event.type,
+		event._reactName,
+		event.target,
+		event.currentTarget,
+		event.relatedTarget,
+		event.isDefaultPrevented(),
+		event.isPropagationStopped()
+	);
+
 // API integration, debouncing
 // Caching
-// Support multi-select
+// Support multi-select (will need more generalisation)
 // Make it generic enough
 function Autocomplete() {
 	const [value, dispatch] = useReducer(autocompleteReducer, {
@@ -94,7 +104,7 @@ function Autocomplete() {
 		dispatch({ type: 'updateText', payload: e.target.value });
 		toggleShowPopper(e.target.value !== '');
 	};
-	const inputFocus = () => {
+	const inputFocus = (e) => {
 		toggleShowPopper(value.text !== '');
 	};
 	const inputKeyDown = (e) => {
@@ -132,17 +142,27 @@ function Autocomplete() {
 
 	return (
 		<Container>
-			<AutocompleteContainer>
+			<AutocompleteContainer id="autocompleteContainer">
 				<Input
+					id="input"
 					ref={inputRef}
 					value={value.text}
 					onChange={inputChange}
 					onFocus={inputFocus}
 					onKeyDown={inputKeyDown}
+					onClick={inputFocus}
+					onBlur={(e) => {
+						e.stopPropagation();
+						if (!popperRef.current.contains(e.relatedTarget)) {
+							toggleShowPopper(false);
+						}
+					}}
 				></Input>
-				<Popper ref={popperRef} show={showPopper}>
+				<Popper id="popper" ref={popperRef} show={showPopper}>
 					{optionsData.map(({ key, displayValue }, index) => (
 						<Option
+							id={`option-${key}`}
+							tabIndex="0"
 							key={key}
 							onClick={() => optionClick(index)}
 							isSelected={value.option.key === key}
