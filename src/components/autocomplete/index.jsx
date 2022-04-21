@@ -11,7 +11,12 @@ import {
 	Error,
 } from './styles';
 
-const DEFAULT_TEXT_VALUE = '';
+const DEFAULT_TEXT_VALUE = '',
+	DEFAULT_OPTION = {
+		index: undefined,
+		key: undefined,
+		displayValue: undefined,
+	};
 
 const calculateNewIndex = (keyCode, index, length) => {
 	if (index === undefined) {
@@ -28,11 +33,7 @@ function autocompleteReducer(currentState, action) {
 	switch (action.type) {
 		case 'updateText':
 			return {
-				option: {
-					index: undefined,
-					key: undefined,
-					displayValue: undefined,
-				},
+				option: DEFAULT_OPTION,
 				text: action.payload,
 			};
 		case 'updateOption':
@@ -56,7 +57,8 @@ function AutocompleteResults({
 	error,
 	options,
 	value,
-	getOptionClickHandler,
+	dispatch,
+	toggleShowPopper, // TODO: Remove this
 }) {
 	if (loading) {
 		return (
@@ -78,6 +80,17 @@ function AutocompleteResults({
 		return <></>;
 	}
 
+	// Option handlers
+	const getOptionClickHandler = (index) => {
+		return () => {
+			dispatch({
+				type: 'updateOption',
+				payload: { index, ...options[index] },
+			});
+			toggleShowPopper(false);
+		};
+	};
+
 	return options.map(({ key, displayValue }, index) => (
 		<Option
 			id={`option-${key}`}
@@ -92,12 +105,14 @@ function AutocompleteResults({
 }
 
 // Debouncing API
+// Erroneous state
 // Caching
 // Support multi-select (will need more generalisation)
 // Make it generic enough
 function Autocomplete() {
+	// Base states
 	const [value, dispatch] = useReducer(autocompleteReducer, {
-		option: { index: undefined, key: undefined, displayValue: undefined },
+		option: DEFAULT_OPTION,
 		text: DEFAULT_TEXT_VALUE,
 	});
 	const { refetch, loading, error, data } = useApi(
@@ -105,22 +120,23 @@ function Autocomplete() {
 		CONFIG.AUTOCOMPLETE_OPTIONS_LIMIT,
 		value.text
 	);
+
+	// Helper states
 	const [options, setOptions] = useState([]);
+	const [showPopper, toggleShowPopper] = useState(false); // Move this inside base state, attach to dispatch
 
-	const [showPopper, toggleShowPopper] = useState(false);
-	const inputRef = useRef(null),
-		popperRef = useRef(null);
+	// Refs
+	const popperRef = useRef(null);
 
+	// Effects
 	useEffect(() => {
 		if (
 			value.text !== DEFAULT_TEXT_VALUE &&
 			value.text !== value.option.displayValue
 		) {
-			console.log('value.text in useEffect: ', value.text);
 			refetch(); // Debounce this every 400ms
 		}
 	}, [value.text]);
-
 	useEffect(() => {
 		if (data) {
 			setOptions(data);
@@ -134,15 +150,12 @@ function Autocomplete() {
 		);
 	};
 	const inputChange = (e) => {
-		const newInput = e.target.value;
-		if (value.option.displayValue) {
-			dispatch({
-				type: 'updateText',
-				payload: newInput.replace(value.option.displayValue, ''),
-			});
-		} else {
-			dispatch({ type: 'updateText', payload: newInput });
-		}
+		dispatch({
+			type: 'updateText',
+			payload: value.option.displayValue
+				? e.target.value.replace(value.option.displayValue, '')
+				: e.target.value,
+		});
 		toggleShowPopper(e.target.value !== DEFAULT_TEXT_VALUE);
 	};
 	const inputKeyDown = (e) => {
@@ -180,25 +193,11 @@ function Autocomplete() {
 		});
 	};
 
-	// Option handlers
-	const getOptionClickHandler = (index) => {
-		return () => {
-			dispatch({
-				type: 'updateOption',
-				payload: { index, ...options[index] },
-			});
-			toggleShowPopper(false);
-		};
-	};
-
-	// console.log('Value: ', value);
-
 	return (
 		<Container>
 			<AutocompleteContainer id="autocompleteContainer">
 				<Input
 					id="input"
-					ref={inputRef}
 					value={value.option.displayValue ?? value.text}
 					onChange={inputChange}
 					onFocus={inputFocus}
@@ -221,7 +220,8 @@ function Autocomplete() {
 						error={error}
 						options={options}
 						value={value}
-						getOptionClickHandler={getOptionClickHandler}
+						dispatch={dispatch}
+						toggleShowPopper={toggleShowPopper}
 					/>
 				</Popper>
 			</AutocompleteContainer>
