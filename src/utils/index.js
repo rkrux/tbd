@@ -14,10 +14,13 @@ function getSortOrder(currentSortOrder) {
 	return CONFIG.SORT_ORDER.NONE;
 }
 
+let previousTimeout = 0;
 function throttle(callbackFn, timeout, ...args) {
-	let previousTimeout = 0;
 	return () => {
 		clearTimeout(previousTimeout);
+		console.log(
+			`Cleared previousTimeout ${previousTimeout} and setting another one.`
+		);
 		previousTimeout = setTimeout(() => callbackFn(...args), timeout);
 	};
 }

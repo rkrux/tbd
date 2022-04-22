@@ -10,6 +10,7 @@ const CONFIG = {
 		NONE: 'none',
 	},
 	THROTTLE_MS: 1000,
+	API_THROTTLE_MS: 400,
 };
 
 export { CONFIG };

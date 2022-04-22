@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
 import useApi, { fetchPasswords } from '../../api';
 import { CONFIG } from '../../constants';
+import { throttle } from '../../utils';
 import {
 	Container,
 	AutocompleteContainer,
@@ -104,7 +105,6 @@ function AutocompleteResults({
 	));
 }
 
-// Debouncing API
 // Erroneous state
 // Caching
 // Support multi-select (will need more generalisation)
@@ -123,7 +123,7 @@ function Autocomplete() {
 
 	// Helper states
 	const [options, setOptions] = useState([]);
-	const [showPopper, toggleShowPopper] = useState(false); // Move this inside base state, attach to dispatch
+	const [showPopper, toggleShowPopper] = useState(false); // TODO: Move this inside base state, attach to dispatch
 
 	// Refs
 	const popperRef = useRef(null);
@@ -134,7 +134,7 @@ function Autocomplete() {
 			value.text !== DEFAULT_TEXT_VALUE &&
 			value.text !== value.option.displayValue
 		) {
-			refetch(); // Debounce this every 400ms
+			throttle(refetch, CONFIG.API_THROTTLE_MS)();
 		}
 	}, [value.text]);
 	useEffect(() => {
