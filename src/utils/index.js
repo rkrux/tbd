@@ -18,9 +18,6 @@ let previousTimeout = 0;
 function throttle(callbackFn, timeout, ...args) {
 	return () => {
 		clearTimeout(previousTimeout);
-		console.log(
-			`Cleared previousTimeout ${previousTimeout} and setting another one.`
-		);
 		previousTimeout = setTimeout(() => callbackFn(...args), timeout);
 	};
 }

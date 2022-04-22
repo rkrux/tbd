@@ -37,6 +37,10 @@ function useApi({ asyncFunction, executeOnMount = true }, ...args) {
 		loading: executeOnMount,
 	});
 
+	const refetch = useCallback(() => {
+		apiDispatcher(dispatch, asyncFunction, ...args);
+	}, args);
+
 	const apiDispatcher = useCallback(
 		async (dispatch, asyncFunction, ...args) => {
 			try {
@@ -58,7 +62,7 @@ function useApi({ asyncFunction, executeOnMount = true }, ...args) {
 
 	return {
 		...state,
-		refetch: () => apiDispatcher(dispatch, asyncFunction, ...args), // Pass args to refetch()?
+		refetch,
 	};
 }
 
