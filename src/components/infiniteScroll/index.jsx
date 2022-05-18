@@ -71,7 +71,7 @@ function useIntersectionObserver(elementRef, deps, callbackFn) {
 	}, deps);
 }
 
-function Scrolling() {
+function InfiniteScroll() {
 	const toDate = useRef(Date.now());
 	const { refetch, loading, error, data } = useApi(
 		{ asyncFunction: fetchPosts, executeOnMount: true },
@@ -141,4 +141,4 @@ function Scrolling() {
 	);
 }
 
-export default Scrolling;
+export default InfiniteScroll;

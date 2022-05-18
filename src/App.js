@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Carousel from './components/carousel';
-import Scrolling from './components/scrolling';
+import InfiniteScroll from './components/infiniteScroll';
 import Table from './components/table';
 import { Autocomplete } from './components/autocomplete';
 import { StyledHeader, AppContainer } from './App.styles';
@@ -8,7 +8,7 @@ import { StyledHeader, AppContainer } from './App.styles';
 const componentConfig = {
 	carousel: <Carousel />,
 	table: <Table />,
-	scrolling: <Scrolling />,
+	scrolling: <InfiniteScroll />,
 	autocomplete: <Autocomplete />,
 };
 
@@ -23,7 +23,7 @@ function App() {
 					Employee Table (Sort/Filter)
 				</span>
 				<span onClick={() => setComponent('scrolling')}>
-					Infinite Scrolling Posts
+					Infinite Posts Scroller
 				</span>
 				<span onClick={() => setComponent('autocomplete')}>
 					Password Autocomplete
