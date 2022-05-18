@@ -8,7 +8,6 @@ const Container = styled.div`
 
 const AutocompleteContainer = styled.div`
 	padding: 8px;
-	border: 2px solid palevioletred;
 	width: 300px;
 `;
 
@@ -19,7 +18,7 @@ const Input = styled.input`
 const Popper = styled.div`
 	display: ${(props) => (props.show ? 'flex' : 'none')};
 	flex-direction: column;
-	border: 2px solid seashell;
+	border: 2px solid palevioletred;
 	max-height: 250px;
 	overflow: auto;
 `;
