@@ -7,7 +7,7 @@ import useApi, {
 import { CONFIG } from '../../constants';
 import { getSortOrder } from '../../utils';
 import { FlexContainer } from '../styles';
-import { StyledTd } from './styles';
+import { StyledTd, StyledTable } from './styles';
 
 /*
 TODO
@@ -262,11 +262,11 @@ function Table() {
 	);
 
 	return (
-		<table>
+		<StyledTable>
 			<TableHeader />
 			<TableData />
 			<TableFooter refetch={refetch} />
-		</table>
+		</StyledTable>
 	);
 }
 

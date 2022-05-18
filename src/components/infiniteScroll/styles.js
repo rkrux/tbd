@@ -28,7 +28,7 @@ const Post = styled.div`
 	width: 900px;
 	margin: 1vmin;
 	padding: 10px;
-	border: 2px solid cyan;
+	border: 2px solid peachpuff;
 	border-radius: 8px;
 `;
 
