@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
 	BlockContainer,
 	ScrollbarContainer,
@@ -9,8 +9,12 @@ import {
 	Image,
 } from './styles.js';
 import { FlexContainer } from '../styles';
+import { faker } from '@faker-js/faker';
 
 const IMAGE_COUNT = 8;
+const BG_COLORS = new Array(IMAGE_COUNT)
+	.fill(undefined)
+	.map((_) => faker.internet.color());
 
 function Carousel() {
 	const [imageIndex, setImageIndex] = useState(0);
@@ -28,6 +32,7 @@ function Carousel() {
 				<ImageContainer
 					onMouseOver={(_) => setShowNav(true)}
 					onMouseLeave={(_) => setShowNav(false)}
+					bgColor={BG_COLORS[imageIndex]}
 				>
 					<LeftButton showNav={showNav} onClick={moveLeft}>
 						{'<'}

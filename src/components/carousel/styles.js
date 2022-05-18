@@ -26,14 +26,15 @@ const Scrollbar = styled.div`
 
 const ImageContainer = styled(FlexContainer)`
 	position: relative;
+	border: 0.2vmin solid purple;
+	border-radius: 2vmin;
+	background-color: ${(props) => props.bgColor};
 `;
 
 const Image = styled(FlexContainer)`
-	border: 0.2vmin solid purple;
 	height: 50vh;
 	width: 50vw;
 	font-size: 2vmin;
-	border-radius: 2vmin;
 `;
 
 const Button = styled.button`
