@@ -31,7 +31,6 @@ function reducer(currentState, action) {
 }
 
 function useApi({ asyncFunction, executeOnMount = true }, ...args) {
-	// console.log('useApi: ', args);
 	const [state, dispatch] = useReducer(reducer, {
 		...DEFAULT_API_LIFECYCLE,
 		loading: executeOnMount,

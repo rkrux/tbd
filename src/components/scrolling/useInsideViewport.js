@@ -13,13 +13,6 @@ function useInsideViewport(elementRef) {
 		const bounds = elementRef.current.getBoundingClientRect();
 		const newIsInside = bounds.bottom < window.innerHeight + 100; // Buffer of some pixels
 		setIsInside(newIsInside);
-		/*
-		console.log(
-			`useInsideViewport,`,
-			elementRef.current,
-			`${bounds.top}, ${bounds.bottom}, ${newIsInside}`
-		);
-		*/
 	};
 
 	useEffect(() => {

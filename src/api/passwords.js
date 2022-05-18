@@ -15,7 +15,6 @@ async function fetchPasswords(...args) {
 	return new Promise((resolve, reject) => {
 		const randomMs = getRandomNumber(CONFIG.API_MAX_LATENCY_MS);
 		setTimeout(() => {
-			// console.log('fetchPasswords, randomMs: ', randomMs, ...args);
 			if (randomMs < CONFIG.API_SUCCESS_THRESHOLD_MS) {
 				resolve(buildPasswords(...args));
 			} else {

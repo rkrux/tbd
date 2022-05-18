@@ -55,7 +55,6 @@ function TopScroller() {
 
 function useIntersectionObserver(elementRef, deps, callbackFn) {
 	useEffect(() => {
-		console.log(elementRef);
 		if (!elementRef.current) {
 			console.error(
 				`Invalid element passed to useIntersectionObserver: ${elementRef.current}`
