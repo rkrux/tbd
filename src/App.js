@@ -18,10 +18,16 @@ function App() {
 	return (
 		<>
 			<StyledHeader>
-				<span onClick={() => setComponent('carousel')}>Carousel</span>
-				<span onClick={() => setComponent('table')}>Table (Sort/Filter)</span>
-				<span onClick={() => setComponent('scrolling')}>Scrolling</span>
-				<span onClick={() => setComponent('autocomplete')}>Autocomplete</span>
+				<span onClick={() => setComponent('carousel')}>Image Carousel</span>
+				<span onClick={() => setComponent('table')}>
+					Employee Table (Sort/Filter)
+				</span>
+				<span onClick={() => setComponent('scrolling')}>
+					Infinite Scrolling Posts
+				</span>
+				<span onClick={() => setComponent('autocomplete')}>
+					Password Autocomplete
+				</span>
 			</StyledHeader>
 			<AppContainer>{componentConfig[component]}</AppContainer>
 		</>
