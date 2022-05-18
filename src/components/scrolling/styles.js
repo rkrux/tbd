@@ -20,7 +20,7 @@ const PostSummary = styled.div`
 	top: 2vh;
 	right: 1vw;
 	padding: 1vmin;
-	border: 2px solid lemonchiffon;
+	border: 2px solid limegreen;
 	border-radius: 8px;
 `;
 

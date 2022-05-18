@@ -9,7 +9,7 @@ const ScrollbarContainer = styled.div`
 	margin-top: 2vmin;
 	width: '100%';
 	height: 12px;
-	border: 0.2vmin solid yellow;
+	border: 0.2vmin solid limegreen;
 	border-radius: 2vmin;
 	position: relative;
 `;
